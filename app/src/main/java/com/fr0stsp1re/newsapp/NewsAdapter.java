@@ -57,7 +57,7 @@ public class NewsAdapter extends ArrayAdapter<com.fr0stsp1re.newsapp.News> {
     }
 
     /**
-     * Returns a list item view that displays information about the earthquake at the given position
+     * Returns a list item view that displays information about the mews at the given position
      * in the list of earthquakes.
      */
     @Override

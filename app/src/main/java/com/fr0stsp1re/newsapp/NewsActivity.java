@@ -29,7 +29,7 @@ public class NewsActivity extends AppCompatActivity
 
     /** URL for earthquake data from the USGS dataset */
     private static final String NEWS_REQUEST_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&orderby=time&minmag=6&limit=10";
+            "https://content.guardianapis.com/search?q=android&api-key=37df9c67-44dc-43a5-a7da-d4d812e60f4e";
 
     /**
      * Constant value for the earthquake loader ID. We can choose any integer.
@@ -125,14 +125,14 @@ public class NewsActivity extends AppCompatActivity
         // Set empty state text to display "No earthquakes found."
         mEmptyStateTextView.setText("No Earthquakes");
 
-        // Clear the adapter of previous earthquake data
-        //mAdapter.clear();
+
+        mAdapter.clear();
 
         // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (news != null && !news.isEmpty()) {
             mAdapter.addAll(news);
-            //updateUi(earthquakes);
+
         }
     }
 

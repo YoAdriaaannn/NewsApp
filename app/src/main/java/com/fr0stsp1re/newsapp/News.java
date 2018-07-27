@@ -42,47 +42,35 @@ package com.fr0stsp1re.newsapp;
 public class News {
 
     //Variables
-    private double mMagnitude;
-    private String mLocation;
-    private long mTimeInMilliseconds;
+    private String mTitle;
+    private String mDate;
     private String mUrl;
 
 
+    public News(String title, String date, String url) {
 
+        mTitle = title;
 
-    public News(double magnitude, String location, long timeInMilliseconds, String url) {
-
-        mMagnitude = magnitude;
-
-        mLocation = location;
-
-        mTimeInMilliseconds = timeInMilliseconds;
+        mDate = date;
 
         mUrl = url;
 
     }
 
 
-    public double getMagnitude() {
+    public String getTitle() {
 
-        return mMagnitude;
-
-    }
-
-
-    public String getLocation() {
-
-        return mLocation;
+        return mTitle;
 
     }
 
 
+    public String getDate() {
 
-    public long getTimeInMilliseconds() {
-
-        return mTimeInMilliseconds;
+        return mDate;
 
     }
+
 
 
     public String getUrl() {

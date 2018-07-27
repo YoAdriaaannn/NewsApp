@@ -50,7 +50,7 @@ public final class QueryUtilities {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
-        List<com.fr0stsp1re.newsapp.News> news = extractFeatureFromJson(jsonResponse);
+        List<com.fr0stsp1re.newsapp.News> news = extractJSON(jsonResponse);
 
         // Return the list of {@link Earthquake}s
         return news;
@@ -135,14 +135,14 @@ public final class QueryUtilities {
      *
      * parsing the given JSON response.
      */
-    private static List<com.fr0stsp1re.newsapp.News> extractFeatureFromJson(String newsJSON) {
+    private static List<News> extractJSON(String newsJSON) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(newsJSON)) {
             return null;
         }
 
         // Create an empty ArrayList that we can start adding earthquakes to
-        List<com.fr0stsp1re.newsapp.News> news = new ArrayList<>();
+        List<News> news = new ArrayList<>();
 
         // Try to parse the JSON response string. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -152,50 +152,38 @@ public final class QueryUtilities {
             // Create a JSONObject from the JSON response string
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
 
-            // Extract the JSONArray associated with the key called "features",
-            // which represents a list of features (or earthquakes).
-            JSONArray newsArray = baseJsonResponse.getJSONArray("features");
+          //extract results array from JSON response
+            JSONArray newsArray = baseJsonResponse.getJSONArray("results");
 
-            // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
+
             for (int i = 0; i < newsArray.length(); i++) {
 
-                // Get a single earthquake at position i within the list of earthquakes
+                // grab news starting at array named results
                 JSONObject currentNews = newsArray.getJSONObject(i);
+                JSONObject results = currentNews.getJSONObject("results");
 
-                // For a given earthquake, extract the JSONObject associated with the
-                // key called "properties", which represents a list of all properties
-                // for that earthquake.
-                JSONObject properties = currentNews.getJSONObject("properties");
-
-                // Extract the value for the key called "mag"
-                double magnitude = properties.getDouble("mag");
+                // get the title
+                String title = results.getString("webTitle");
 
                 // Extract the value for the key called "place"
-                String location = properties.getString("place");
-
-                // Extract the value for the key called "time"
-                long time = properties.getLong("time");
+                String date = results.getString("webPublicationDate");
 
                 // Extract the value for the key called "url"
-                String url = properties.getString("url");
+                String url = results.getString("webUrl");
 
+                News newNews = new News(title, date, url);
 
-                // Create a new {@link Earthquake} object with the magnitude, location, time,
-                // and url from the JSON response.
-                News earthquake = new News(magnitude, location, time, url);
-
-                // Add the new {@link Earthquake} to the list of earthquakes.
-                news.add(earthquake);
+                news.add(newNews);
             }
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
 
-        // Return the list of earthquakes
+        // Return the list of news
         return news;
     }
 
