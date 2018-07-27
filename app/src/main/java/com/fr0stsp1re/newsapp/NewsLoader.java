@@ -41,74 +41,33 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import java.util.List;
 
-
-
-/**
-
- * Loads a list of earthquakes by using an AsyncTask to perform the
-
- * network request to the given URL.
-
- */
-
-public class NewsLoader extends AsyncTaskLoader<List<com.fr0stsp1re.newsapp.News>> {
-
+public class NewsLoader extends AsyncTaskLoader<List<News>> {
 
     private static final String LOG_TAG = NewsLoader.class.getName();
 
-    /** Query URL */
-
+    // query url
     private String mUrl;
 
-    /**
-
-     * @param context of the activity
-
-     * @param url to load data from
-
-     */
-
+    // context
     public NewsLoader(Context context, String url) {
-
         super(context);
-
         mUrl = url;
-
     }
 
-
-
     @Override
-
     protected void onStartLoading() {
-
         forceLoad();
-
     }
 
-    /**
-
-     * This is on a background thread.
-
-     */
-
     @Override
-
-    public List<com.fr0stsp1re.newsapp.News> loadInBackground() {
+    public List<News> loadInBackground() {
 
         if (mUrl == null) {
-
             return null;
-
         }
 
-
-        // Perform the network request, parse the response, and extract a list of earthquakes.
-
+        // Make network request and parse the response
         List<News> news = QueryUtilities.GrabNewsData(mUrl);
-
         return news;
-
     }
-
 }

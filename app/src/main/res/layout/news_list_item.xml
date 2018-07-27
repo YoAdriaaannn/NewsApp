@@ -36,31 +36,21 @@
   ~ SOFTWARE.
   ~
   -->
-<!-- Layout for a single list item that displays an earthquake -->
+
+<!-- Layout for news items -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingEnd="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingStart="16dp">
 
-    <TextView
-        android:id="@+id/magnitude"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_gravity="center_vertical"
-        android:background="@color/colorPrimary"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        tools:text="8.9" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="16dp"
@@ -69,54 +59,27 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/location_offset"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:textAllCaps="true"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            tools:text="30km S of" />
-
-        <TextView
-            android:id="@+id/primary_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            tools:text="Long placeholder location that should wrap to more than 2 lines of text" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:orientation="vertical">
+            tools:text="This is a sample news title" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="start"
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            tools:text="Mar 6, 2010" />
+            tools:text="2018-10-01" />
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            tools:text="3:00 PM" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_blue_dark"/>
     </LinearLayout>
+
 </LinearLayout>

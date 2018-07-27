@@ -37,6 +37,7 @@
   -->
 
 <resources>
-    <string name="app_name">NewsApp</string>
-    <string name="near_the">Near the</string>
+    <string name="app_name">Android News</string>
+    <string name="no_news">No news!</string>
+    <string name="no_date_available">No date available</string>
 </resources>

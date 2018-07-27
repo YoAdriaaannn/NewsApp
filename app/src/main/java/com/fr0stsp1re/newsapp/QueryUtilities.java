@@ -19,29 +19,18 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Helper methods related to requesting and receiving earthquake data from USGS.
- */
 public final class QueryUtilities {
 
-    /** Tag for the log messages */
+    // log tag for message logging
     private static final String LOG_TAG = QueryUtilities.class.getSimpleName();
 
-    /**
-     * Create a private constructor because no one should ever create a {@link QueryUtilities} object.
-     * This class is only meant to hold static variables and methods, which can be accessed
-     * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
-     */
     private QueryUtilities() {
     }
 
-    /**query news adn return objects
-     */
-    public static List<com.fr0stsp1re.newsapp.News> GrabNewsData(String requestUrl) {
-        // Create URL object
-        URL url = createUrl(requestUrl);
 
-        // Perform HTTP request to the URL and receive a JSON response back
+    public static List<News> GrabNewsData(String requestUrl) {
+
+        URL url = createUrl(requestUrl);
         String jsonResponse = null;
         try {
             jsonResponse = makeHttpRequest(url);
@@ -49,16 +38,11 @@ public final class QueryUtilities {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link Earthquake}s
-        List<com.fr0stsp1re.newsapp.News> news = extractJSON(jsonResponse);
-
-        // Return the list of {@link Earthquake}s
+        List<News> news = extractJSON(jsonResponse);
         return news;
     }
 
-    /**
-     * Returns new URL object from the given string URL.
-     */
+    // Returns new URL object
     private static URL createUrl(String stringUrl) {
         URL url = null;
         try {
@@ -69,9 +53,7 @@ public final class QueryUtilities {
         return url;
     }
 
-    /**
-     * Make an HTTP request to the given URL and return a String as the response.
-     */
+    // makes http request
     private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
@@ -113,10 +95,7 @@ public final class QueryUtilities {
         return jsonResponse;
     }
 
-    /**
-     * Convert the {@link InputStream} into a String which contains the
-     * whole JSON response from the server.
-     */
+    // read input stream
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
@@ -131,10 +110,7 @@ public final class QueryUtilities {
         return output.toString();
     }
 
-    /**
-     *
-     * parsing the given JSON response.
-     */
+    // extract JSON response
     private static List<News> extractJSON(String newsJSON) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(newsJSON)) {
@@ -144,46 +120,35 @@ public final class QueryUtilities {
         // Create an empty ArrayList that we can start adding earthquakes to
         List<News> news = new ArrayList<>();
 
-        // Try to parse the JSON response string. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            // Create a JSONObject from the JSON response string
+            // Create a JSONObject and extract results
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
+            JSONObject newsArray = baseJsonResponse.optJSONObject("response");
+            JSONArray jsonArray = newsArray.optJSONArray("results");
 
-          //extract results array from JSON response
-            JSONArray newsArray = baseJsonResponse.getJSONArray("results");
 
-
-            for (int i = 0; i < newsArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
 
                 // grab news starting at array named results
-                JSONObject currentNews = newsArray.getJSONObject(i);
-                JSONObject results = currentNews.getJSONObject("results");
+                JSONObject article = jsonArray.optJSONObject(i);
 
                 // get the title
-                String title = results.getString("webTitle");
+                String title = article.getString("webTitle");
 
                 // Extract the value for the key called "place"
-                String date = results.getString("webPublicationDate");
+                String date = article.getString("webPublicationDate");
 
                 // Extract the value for the key called "url"
-                String url = results.getString("webUrl");
+                String url = article.getString("webUrl");
 
                 News newNews = new News(title, date, url);
-
                 news.add(newNews);
             }
 
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
-
-        // Return the list of news
         return news;
     }
 

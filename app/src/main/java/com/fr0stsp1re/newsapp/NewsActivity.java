@@ -1,7 +1,6 @@
 
 package com.fr0stsp1re.newsapp;
 
-
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
@@ -17,8 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,21 +24,15 @@ public class NewsActivity extends AppCompatActivity
 
     private static final String LOG_TAG = NewsActivity.class.getName();
 
-    /** URL for earthquake data from the USGS dataset */
+   // request url
     private static final String NEWS_REQUEST_URL =
             "https://content.guardianapis.com/search?q=android&api-key=37df9c67-44dc-43a5-a7da-d4d812e60f4e";
+    // No news TextView
+    private TextView mNoNewsTextView;
 
-    /**
-     * Constant value for the earthquake loader ID. We can choose any integer.
-     * This really only comes into play if you're using multiple loaders.
-     */
     private static final int NEWS_LOADER_ID = 1;
 
-    /** Adapter for the list of earthquakes */
     private NewsAdapter mAdapter;
-
-    /** TextView that is displayed when the list is empty */
-    private TextView mEmptyStateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,90 +40,63 @@ public class NewsActivity extends AppCompatActivity
         setContentView(R.layout.news_activity);
 
 
-        // Find a reference to the {@link ListView} in the layout
         ListView newsListView = (ListView) findViewById(R.id.list);
 
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
-        newsListView.setEmptyView(mEmptyStateTextView);
+        mNoNewsTextView = (TextView) findViewById(R.id.empty_view);
+        newsListView.setEmptyView(mNoNewsTextView);
 
-        // Create a new adapter that takes an empty list of news as input
+        // set up adapter and populate
         mAdapter = new NewsAdapter(this, new ArrayList<News>());
-
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
         newsListView.setAdapter(mAdapter);
 
-        // Set an item click listener on the ListView, which sends an intent to a web browser
-        // to open a website with more information about the selected earthquake.
+        // Set an item click listener for news items to open in web browser
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Find the current earthquake that was clicked on
-                com.fr0stsp1re.newsapp.News currentNews = mAdapter.getItem(position);
 
-                // Convert the String URL into a URI object (to pass into the Intent constructor)
+              News currentNews = mAdapter.getItem(position);
+
+                // Convert the String URL into a URI object. Create intent and pass URI.
                 Uri earthquakeUri = Uri.parse(currentNews.getUrl());
+               Intent webIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
 
-                // Create a new intent to view the earthquake URI
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, earthquakeUri);
-
-                // Send the intent to launch a new activity
-                startActivity(websiteIntent);
+                startActivity(webIntent);
             }
         });
 
-        // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        // Get details on the currently active default data network
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        // If there is a network connection, fetch data
+        // Grab news if there is a network connection
         if (networkInfo != null && networkInfo.isConnected()) {
-            // Get a reference to the LoaderManager, in order to interact with loaders.
-            LoaderManager loaderManager = getLoaderManager();
 
-            // Initialize the loader. Pass in the int ID constant defined above and pass in null for
-            // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-            // because this activity implements the LoaderCallbacks interface).
+            LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(NEWS_LOADER_ID, null, this);
         } else {
-            // Otherwise, display error
-            // First, hide loading indicator so error message will be visible
+            //hide loading indicator and display error
             View loadingIndicator = findViewById(R.id.loading_indicator);
             loadingIndicator.setVisibility(View.GONE);
-
-            // Update empty state with no connection error message
-            mEmptyStateTextView.setText("Uh oh! No internet connection!");
+            mNoNewsTextView.setText("Uh oh! No internet connection!");
         }
     }
 
-    @Override
-    public Loader<List<com.fr0stsp1re.newsapp.News>> onCreateLoader(int i, Bundle bundle) {
-        // Create a new loader for the given
-        Log.v(LOG_TAG, "The loader is being created");
-        return new com.fr0stsp1re.newsapp.NewsLoader(this, NEWS_REQUEST_URL);
-    }
 
     @Override
-    public void onLoadFinished(Loader<List<com.fr0stsp1re.newsapp.News>> loader, List<com.fr0stsp1re.newsapp.News> news) {
-        // Hide loading indicator because the data has been loaded
+    public void onLoadFinished(Loader<List<News>> loader, List<News> news) {
+
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
 
         Log.v(LOG_TAG, "The loader is finished");
-        // Set empty state text to display "No earthquakes found."
-        mEmptyStateTextView.setText("No Earthquakes");
 
+        mNoNewsTextView.setText(R.string.no_news);
 
         mAdapter.clear();
 
-        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
-        // data set. This will trigger the ListView to update.
         if (news != null && !news.isEmpty()) {
             mAdapter.addAll(news);
-
         }
     }
 
@@ -141,4 +105,12 @@ public class NewsActivity extends AppCompatActivity
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
     }
+
+    @Override
+    public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
+
+        Log.v(LOG_TAG, "The loader is being created");
+        return new NewsLoader(this, NEWS_REQUEST_URL);
+    }
+
 }

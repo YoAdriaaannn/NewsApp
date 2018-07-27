@@ -36,7 +36,6 @@
  *
  */
 
-
 package com.fr0stsp1re.newsapp;
 
 public class News {
@@ -46,37 +45,22 @@ public class News {
     private String mDate;
     private String mUrl;
 
-
     public News(String title, String date, String url) {
 
         mTitle = title;
-
         mDate = date;
-
         mUrl = url;
-
     }
-
 
     public String getTitle() {
-
         return mTitle;
-
     }
-
 
     public String getDate() {
-
         return mDate;
-
     }
-
-
 
     public String getUrl() {
-
         return mUrl;
-
     }
-
 }
