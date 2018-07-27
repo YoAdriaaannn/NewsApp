@@ -1,17 +1,39 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (c) 2018.  Adrian Raff AKA Fr0stsp1re
+ * ************PROJECT LICENSE*************
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This project was submitted by Adrian Raff as part of the  Android Basics Nanodegree At Udacity.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * The Udacity Honor code requires your submissions must be your own work.
+ * Submitting this project as yours will cause you to break the Udacity Honor Code
+ * and may result in disiplinary action.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * The author of this project allows you to check the code as a reference only. You may not submit this project or any part
+ * of the code as your own.
+ *
+ * Besides the above notice, the following license applies and this license notice
+ * must be included in all works derived from this project.
+ *
+ * MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
  */
 package com.fr0stsp1re.newsapp;
 
@@ -21,20 +43,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import java.util.List;
 
-public class NewsAdapter extends ArrayAdapter<com.fr0stsp1re.newsapp.News> {
+public class NewsAdapter extends ArrayAdapter<News> {
 
+    // Used to split timestamp and date
     private static final String LOCATION_SEPARATOR = "T";
 
-     public NewsAdapter(Context context, List<News> news) {
+    public NewsAdapter(Context context, List<News> news) {
         super(context, 0, news);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Check if there is an existing list item view (called convertView) that we can reuse,
-        // otherwise, if convertView is null, then inflate a new list item layout.
+
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
@@ -43,12 +66,13 @@ public class NewsAdapter extends ArrayAdapter<com.fr0stsp1re.newsapp.News> {
 
         News currentNews = getItem(position);
 
-        // Find the TextView with view ID title
         TextView titleView = (TextView) listItemView.findViewById(R.id.title);
         titleView.setText(currentNews.getTitle());
 
+        TextView sectionView = (TextView) listItemView.findViewById(R.id.section);
+        sectionView.setText(currentNews.getSection());
 
-       // Date comes back from JSON with time. Strip time from date adn display date only.
+        // Date comes back from JSON with time. Strip time from date and display date only.
         String originalDate = currentNews.getDate();
 
         String separatedDate;
@@ -63,9 +87,8 @@ public class NewsAdapter extends ArrayAdapter<com.fr0stsp1re.newsapp.News> {
             separatedDate = getContext().getString(R.string.no_date_available);
         }
 
-        // Find the TextView with view ID date
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-               dateView.setText(separatedDate);
+        dateView.setText(separatedDate);
 
         return listItemView;
     }

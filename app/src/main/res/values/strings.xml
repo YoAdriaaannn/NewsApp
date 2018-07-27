@@ -40,4 +40,8 @@
     <string name="app_name">Android News</string>
     <string name="no_news">No news!</string>
     <string name="no_date_available">No date available</string>
+    <string name="no_internet">Uh oh! No internet connection! Please establish an internet connection and refresh this page</string>
+    <string name="placeholder_no_news">A news title in case there is no feed</string>
+    <string name="placeholder_date">2018-10-01</string>
+    <string name="placeholder_section">Technology</string>
 </resources>

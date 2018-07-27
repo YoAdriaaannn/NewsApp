@@ -39,6 +39,7 @@
 package com.fr0stsp1re.newsapp;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 import java.util.List;
 
 public class NewsLoader extends AsyncTaskLoader<List<News>> {
@@ -52,11 +53,13 @@ public class NewsLoader extends AsyncTaskLoader<List<News>> {
     public NewsLoader(Context context, String url) {
         super(context);
         mUrl = url;
+        Log.v(LOG_TAG, "URL loaded");
     }
 
     @Override
     protected void onStartLoading() {
         forceLoad();
+        Log.v(LOG_TAG, "onStartLoading");
     }
 
     @Override
@@ -68,6 +71,7 @@ public class NewsLoader extends AsyncTaskLoader<List<News>> {
 
         // Make network request and parse the response
         List<News> news = QueryUtilities.GrabNewsData(mUrl);
+        Log.v(LOG_TAG, "loadInBackground");
         return news;
     }
 }

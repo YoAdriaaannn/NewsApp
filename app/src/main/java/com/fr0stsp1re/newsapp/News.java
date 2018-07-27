@@ -40,20 +40,24 @@ package com.fr0stsp1re.newsapp;
 
 public class News {
 
-    //Variables
     private String mTitle;
     private String mDate;
+    private String mSection;
     private String mUrl;
 
-    public News(String title, String date, String url) {
-
+    public News(String title, String date, String section, String url) {
         mTitle = title;
         mDate = date;
         mUrl = url;
+        mSection = section;
     }
 
     public String getTitle() {
         return mTitle;
+    }
+
+    public  String getSection() {
+        return mSection;
     }
 
     public String getDate() {
