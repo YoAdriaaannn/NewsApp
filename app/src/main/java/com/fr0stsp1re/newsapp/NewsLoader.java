@@ -37,15 +37,8 @@
  */
 
 package com.fr0stsp1re.newsapp;
-
-
-
 import android.content.AsyncTaskLoader;
-
 import android.content.Context;
-
-
-
 import java.util.List;
 
 
@@ -61,24 +54,13 @@ import java.util.List;
 public class NewsLoader extends AsyncTaskLoader<List<com.fr0stsp1re.newsapp.News>> {
 
 
-
-    /** Tag for log messages */
-
     private static final String LOG_TAG = NewsLoader.class.getName();
-
-
 
     /** Query URL */
 
     private String mUrl;
 
-
-
     /**
-
-     * Constructs a new {@link EarthquakeLoader}.
-
-     *
 
      * @param context of the activity
 
@@ -104,8 +86,6 @@ public class NewsLoader extends AsyncTaskLoader<List<com.fr0stsp1re.newsapp.News
 
     }
 
-
-
     /**
 
      * This is on a background thread.
@@ -123,12 +103,11 @@ public class NewsLoader extends AsyncTaskLoader<List<com.fr0stsp1re.newsapp.News
         }
 
 
-
         // Perform the network request, parse the response, and extract a list of earthquakes.
 
-        List<com.fr0stsp1re.newsapp.News> earthquakes = com.fr0stsp1re.newsapp.News.QueryUtilities.fetchEarthquakeData(mUrl);
+        List<News> news = QueryUtilities.GrabNewsData(mUrl);
 
-        return earthquakes;
+        return news;
 
     }
 

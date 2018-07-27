@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fr0stsp1re.android.quakereport;
+package com.fr0stsp1re.newsapp;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -32,13 +32,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * An {@link EarthquakeAdapter} knows how to create a list item layout for each earthquake
- * in the data source (a list of {@link Earthquake} objects).
+ * An {@link NewsAdapter} knows how to create a list item layout for each earthquake
+ * in the data source (a list of {@link News} objects).
  *
  * These list item layouts will be provided to an adapter view like ListView
  * to be displayed to the user.
  */
-public class EarthquakeAdapter extends ArrayAdapter<com.fr0stsp1re.android.quakereport.Earthquake> {
+public class NewsAdapter extends ArrayAdapter<com.fr0stsp1re.newsapp.News> {
 
     /**
      * The part of the location string from the USGS service that we use to determine
@@ -47,13 +47,13 @@ public class EarthquakeAdapter extends ArrayAdapter<com.fr0stsp1re.android.quake
     private static final String LOCATION_SEPARATOR = " of ";
 
     /**
-     * Constructs a new {@link EarthquakeAdapter}.
+     * Constructs a new {@link NewsAdapter}.
      *
      * @param context of the app
-     * @param earthquakes is the list of earthquakes, which is the data source of the adapter
+     * @param news is the list of earthquakes, which is the data source of the adapter
      */
-    public EarthquakeAdapter(Context context, List<com.fr0stsp1re.android.quakereport.Earthquake> earthquakes) {
-        super(context, 0, earthquakes);
+    public NewsAdapter(Context context, List<com.fr0stsp1re.newsapp.News> news) {
+        super(context, 0, news);
     }
 
     /**
@@ -71,26 +71,20 @@ public class EarthquakeAdapter extends ArrayAdapter<com.fr0stsp1re.android.quake
         }
 
         // Find the earthquake at the given position in the list of earthquakes
-        com.fr0stsp1re.android.quakereport.Earthquake currentEarthquake = getItem(position);
+        com.fr0stsp1re.newsapp.News currentNews = getItem(position);
 
         // Find the TextView with view ID magnitude
         TextView magnitudeView = (TextView) listItemView.findViewById(R.id.magnitude);
         // Format the magnitude to show 1 decimal place
-        String formattedMagnitude = formatMagnitude(currentEarthquake.getMagnitude());
+        String formattedMagnitude = formatMagnitude(currentNews.getMagnitude());
         // Display the magnitude of the current earthquake in that TextView
         magnitudeView.setText(formattedMagnitude);
 
-        // Set the proper background color on the magnitude circle.
-        // Fetch the background from the TextView, which is a GradientDrawable.
-        GradientDrawable magnitudeCircle = (GradientDrawable) magnitudeView.getBackground();
-        // Get the appropriate background color based on the current earthquake magnitude
-        int magnitudeColor = getMagnitudeColor(currentEarthquake.getMagnitude());
-        // Set the color on the magnitude circle
-        magnitudeCircle.setColor(magnitudeColor);
+
 
         // Get the original location string from the Earthquake object,
         // which can be in the format of "5km N of Cairo, Egypt" or "Pacific-Antarctic Ridge".
-        String originalLocation = currentEarthquake.getLocation();
+        String originalLocation = currentNews.getLocation();
 
         // If the original location string (i.e. "5km N of Cairo, Egypt") contains
         // a primary location (Cairo, Egypt) and a location offset (5km N of that city)
@@ -128,7 +122,7 @@ public class EarthquakeAdapter extends ArrayAdapter<com.fr0stsp1re.android.quake
         locationOffsetView.setText(locationOffset);
 
         // Create a new Date object from the time in milliseconds of the earthquake
-        Date dateObject = new Date(currentEarthquake.getTimeInMilliseconds());
+        Date dateObject = new Date(currentNews.getTimeInMilliseconds());
 
         // Find the TextView with view ID date
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
@@ -146,51 +140,6 @@ public class EarthquakeAdapter extends ArrayAdapter<com.fr0stsp1re.android.quake
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;
-    }
-
-    /**
-     * Return the color for the magnitude circle based on the intensity of the earthquake.
-     *
-     * @param magnitude of the earthquake
-     */
-    private int getMagnitudeColor(double magnitude) {
-        int magnitudeColorResourceId;
-        int magnitudeFloor = (int) Math.floor(magnitude);
-        switch (magnitudeFloor) {
-            case 0:
-            case 1:
-                magnitudeColorResourceId = R.color.magnitude1;
-                break;
-            case 2:
-                magnitudeColorResourceId = R.color.magnitude2;
-                break;
-            case 3:
-                magnitudeColorResourceId = R.color.magnitude3;
-                break;
-            case 4:
-                magnitudeColorResourceId = R.color.magnitude4;
-                break;
-            case 5:
-                magnitudeColorResourceId = R.color.magnitude5;
-                break;
-            case 6:
-                magnitudeColorResourceId = R.color.magnitude6;
-                break;
-            case 7:
-                magnitudeColorResourceId = R.color.magnitude7;
-                break;
-            case 8:
-                magnitudeColorResourceId = R.color.magnitude8;
-                break;
-            case 9:
-                magnitudeColorResourceId = R.color.magnitude9;
-                break;
-            default:
-                magnitudeColorResourceId = R.color.magnitude10plus;
-                break;
-        }
-
-        return ContextCompat.getColor(getContext(), magnitudeColorResourceId);
     }
 
     /**

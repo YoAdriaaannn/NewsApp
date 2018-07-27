@@ -40,6 +40,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fr0stsp1re.newsapp">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
