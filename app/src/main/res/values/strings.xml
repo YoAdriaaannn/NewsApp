@@ -44,4 +44,5 @@
     <string name="placeholder_no_news">A news title in case there is no feed</string>
     <string name="placeholder_date">2018-10-01</string>
     <string name="placeholder_section">Technology</string>
+    <string name="no_author">A placeholder for no author</string>
 </resources>

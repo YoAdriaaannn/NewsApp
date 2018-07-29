@@ -42,7 +42,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -72,6 +76,9 @@ public class NewsAdapter extends ArrayAdapter<News> {
         TextView sectionView = (TextView) listItemView.findViewById(R.id.section);
         sectionView.setText(currentNews.getSection());
 
+        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
+        authorView.setText(currentNews.getAuthor());
+
         // Date comes back from JSON with time. Strip time from date and display date only.
         String originalDate = currentNews.getDate();
 
@@ -89,6 +96,27 @@ public class NewsAdapter extends ArrayAdapter<News> {
 
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         dateView.setText(separatedDate);
+
+
+        // Find the ImageView in the list_item.xml layout with the ID image.
+
+        ImageView articleImageView = listItemView.findViewById(R.id.news_image);
+
+        String imageUrl = currentNews.getImageUrl();
+
+
+
+        if (imageUrl != null) {
+
+            Picasso.get().load(imageUrl).into(articleImageView);
+
+        } else {
+
+            articleImageView.setImageResource(R.drawable.no_image_available);
+
+        }
+
+
 
         return listItemView;
     }

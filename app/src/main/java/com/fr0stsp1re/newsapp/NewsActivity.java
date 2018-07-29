@@ -38,13 +38,13 @@
 
 package com.fr0stsp1re.newsapp;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import java.util.ArrayList;
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
@@ -55,6 +55,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsActivity extends AppCompatActivity
@@ -63,7 +64,7 @@ public class NewsActivity extends AppCompatActivity
     private static final String LOG_TAG = NewsActivity.class.getName();
 
     // request url
-    private static final String NEWS_REQUEST_URL = "https://content.guardianapis.com/search?q=android&api-key=37df9c67-44dc-43a5-a7da-d4d812e60f4e";
+    private static final String NEWS_REQUEST_URL = "https://content.guardianapis.com/search?q=android&show-tags=contributor&show-fields=thumbnail&api-key=37df9c67-44dc-43a5-a7da-d4d812e60f4e";
 
     // no news TextView
     private TextView mNoNewsTextView;
@@ -72,12 +73,16 @@ public class NewsActivity extends AppCompatActivity
 
     private NewsAdapter mAdapter;
 
+    private SwipeRefreshLayout mySwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_activity);
 
+        // init layout elements
         ListView newsListView = (ListView) findViewById(R.id.list);
+        mySwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         mNoNewsTextView = (TextView) findViewById(R.id.empty_view);
         newsListView.setEmptyView(mNoNewsTextView);
@@ -94,32 +99,65 @@ public class NewsActivity extends AppCompatActivity
                 News currentNews = mAdapter.getItem(position);
 
                 // Convert the String URL into a URI object. Create intent and pass URI.
-                Uri newsUri = Uri.parse(currentNews.getUrl());
-                Intent webIntent = new Intent(Intent.ACTION_VIEW, newsUri);
+                try {
 
-                startActivity(webIntent);
+                    Uri newsUri = Uri.parse(currentNews.getUrl());
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, newsUri);
+                    startActivity(webIntent);
+                } catch (NullPointerException e) {
+                    Log.v(LOG_TAG, "OPPS! There was a null pointer exception");
+                } finally {
+                    Log.v(LOG_TAG, "Resuming opening web browser");
+                }
             }
         });
 
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+        // check network connection
+        networkCheck();
 
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        // swipe refresh listener
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
+                        networkCheck();
+                    }
+                }
+        );
+    }
 
-        // Grab news if there is a network connection
-        if (networkInfo != null && networkInfo.isConnected()) {
+    private void networkCheck() {
+        try {
+            mAdapter.clear();
 
-            LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        } else {
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-            //hide loading indicator and display error if no connection
-            View loadingIndicator = findViewById(R.id.progress_indicator);
-            loadingIndicator.setVisibility(View.GONE);
-            mNoNewsTextView.setText(R.string.no_internet);
-            mNoNewsTextView.setPadding(8, 8, 8, 8);
+            // Grab news if there is a network connection
+            if (networkInfo != null && networkInfo.isConnected()) {
 
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.initLoader(NEWS_LOADER_ID, null, this);
+
+            } else {
+
+                //hide loading indicator and display error if no connection
+                View loadingIndicator = findViewById(R.id.progress_indicator);
+                loadingIndicator.setVisibility(View.GONE);
+                mNoNewsTextView.setVisibility(View.VISIBLE);
+                mNoNewsTextView.setText(R.string.no_internet);
+                mNoNewsTextView.setPadding(8, 8, 8, 8);
+            }
+
+        } catch (NullPointerException e) {
+            Log.v(LOG_TAG, "OPPS! There was a null pointer exception");
+
+        } finally {
+            //stop refresh indicator from spinning
+            mySwipeRefreshLayout.setRefreshing(false);
         }
     }
 

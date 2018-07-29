@@ -60,7 +60,7 @@ public final class QueryUtilities {
     private static final String LOG_TAG = QueryUtilities.class.getSimpleName();
 
     private QueryUtilities() {
-        return;
+
     }
 
     public static List<News> GrabNewsData(String requestUrl) {
@@ -167,6 +167,7 @@ public final class QueryUtilities {
             JSONObject newsArray = rootJsonResponse.optJSONObject("response");
             JSONArray jsonArray = newsArray.optJSONArray("results");
 
+
             // loop through jsonArray and set variables
             for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -185,7 +186,24 @@ public final class QueryUtilities {
                 // Extract the value for the key called "url"
                 String url = article.getString("webUrl");
 
-                News newNews = new News(title, date, section, url);
+                // grab image data
+                JSONObject fields = article.optJSONObject("fields");
+                String imageUrl = fields.getString("thumbnail");
+
+                // Start down the tags array and extract author
+                JSONArray tags = article.getJSONArray("tags");
+
+                String author;
+
+                if (tags.length() > 0) {
+                    JSONObject tagsField = tags.getJSONObject(0);
+                    author = tagsField.getString("webTitle");
+                }
+                else{
+                    author = "No author information avaialbe";
+                }
+
+                News newNews = new News(title, date, section, author, imageUrl, url);
                 news.add(newNews);
             }
 

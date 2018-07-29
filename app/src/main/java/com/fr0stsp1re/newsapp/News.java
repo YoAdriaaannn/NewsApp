@@ -43,12 +43,16 @@ public class News {
     private String mTitle;
     private String mDate;
     private String mSection;
+    private String mAuthor;
     private String mUrl;
+    private String mImageUrl;
 
-    public News(String title, String date, String section, String url) {
+    public News(String title, String date, String section, String author, String imageUrl, String url) {
         mTitle = title;
         mDate = date;
         mUrl = url;
+        mAuthor = author;
+        mImageUrl = imageUrl;
         mSection = section;
     }
 
@@ -56,8 +60,12 @@ public class News {
         return mTitle;
     }
 
-    public  String getSection() {
+    public String getSection() {
         return mSection;
+    }
+
+    public String getAuthor() {
+        return mAuthor;
     }
 
     public String getDate() {
@@ -66,5 +74,9 @@ public class News {
 
     public String getUrl() {
         return mUrl;
+    }
+
+    public String getImageUrl() {
+        return mImageUrl;
     }
 }
