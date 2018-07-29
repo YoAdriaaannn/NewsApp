@@ -190,4 +190,5 @@ public class NewsActivity extends AppCompatActivity
     public void onLoaderReset(Loader<List<com.fr0stsp1re.newsapp.News>> loader) {
         mAdapter.clear();
     }
+
 }

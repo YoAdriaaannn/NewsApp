@@ -79,4 +79,5 @@ public class News {
     public String getImageUrl() {
         return mImageUrl;
     }
+
 }

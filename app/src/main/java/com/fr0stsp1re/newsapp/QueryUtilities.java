@@ -161,12 +161,10 @@ public final class QueryUtilities {
         List<News> news = new ArrayList<>();
 
         try {
-
             // Create a JSONObject and extract results
             JSONObject rootJsonResponse = new JSONObject(newsJSON);
             JSONObject newsArray = rootJsonResponse.optJSONObject("response");
             JSONArray jsonArray = newsArray.optJSONArray("results");
-
 
             // loop through jsonArray and set variables
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -202,15 +200,12 @@ public final class QueryUtilities {
                 else{
                     author = "No author information avaialbe";
                 }
-
                 News newNews = new News(title, date, section, author, imageUrl, url);
                 news.add(newNews);
             }
-
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
         return news;
     }
-
 }

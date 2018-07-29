@@ -81,44 +81,27 @@ public class NewsAdapter extends ArrayAdapter<News> {
 
         // Date comes back from JSON with time. Strip time from date and display date only.
         String originalDate = currentNews.getDate();
-
         String separatedDate;
 
         if (originalDate.contains(LOCATION_SEPARATOR)) {
-
             String[] parts = originalDate.split(LOCATION_SEPARATOR);
             separatedDate = parts[0];
-
         } else {
-
             separatedDate = getContext().getString(R.string.no_date_available);
         }
 
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         dateView.setText(separatedDate);
 
-
-        // Find the ImageView in the list_item.xml layout with the ID image.
-
-        ImageView articleImageView = listItemView.findViewById(R.id.news_image);
-
+        ImageView newsImageView = listItemView.findViewById(R.id.news_image);
         String imageUrl = currentNews.getImageUrl();
 
-
-
+        // check if there is an image if not set a default placeholder
         if (imageUrl != null) {
-
-            Picasso.get().load(imageUrl).into(articleImageView);
-
+            Picasso.get().load(imageUrl).into(newsImageView);
         } else {
-
-            articleImageView.setImageResource(R.drawable.no_image_available);
-
+            newsImageView.setImageResource(R.drawable.no_image_available);
         }
-
-
-
         return listItemView;
     }
-
 }
